@@ -1,14 +1,20 @@
-import { Outlet, useNavigate } from "react-router-dom";
-import { LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import { NavLink, Outlet } from "react-router-dom";
+import { LogoutButton } from "@/components/common/LogoutButton";
 import { APP_NAME } from "@/constants/app";
 import { ROUTES } from "@/constants/routes";
 import { useAuth } from "@/hooks/useAuth";
+import { cn } from "@/utils/cn";
+
+const adminNavLinkClass = ({ isActive }: { isActive: boolean }) =>
+  cn(
+    "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+    isActive
+      ? "bg-primary/10 text-foreground"
+      : "text-muted-foreground hover:text-foreground",
+  );
 
 export function AdminLayout() {
-  const navigate = useNavigate();
-  const { logout, isLoggingOut, currentUser } = useAuth();
+  const { currentUser } = useAuth();
 
   return (
     <div className="min-h-svh bg-background">
@@ -20,31 +26,29 @@ export function AdminLayout() {
             </p>
             {currentUser ? (
               <p className="truncate text-xs text-muted-foreground">
-                {currentUser.name}
+                Admin · {currentUser.name}
               </p>
             ) : null}
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              navigate(ROUTES.root);
-              void logout();
-            }}
-            disabled={isLoggingOut}
-          >
-            {isLoggingOut ? (
-              <LoadingSpinner className="size-4" />
-            ) : (
-              <LogOut className="size-4" />
-            )}
-            Logout
-          </Button>
+          <LogoutButton />
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+
+      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+        <nav className="mb-6 flex flex-wrap gap-1 border-b border-border pb-3">
+          <NavLink to={ROUTES.admin} end className={adminNavLinkClass}>
+            Dashboard
+          </NavLink>
+          <NavLink to={ROUTES.adminVisitors} className={adminNavLinkClass}>
+            Visitors
+          </NavLink>
+          <NavLink to={ROUTES.adminArtists} className={adminNavLinkClass}>
+            Artists
+          </NavLink>
+        </nav>
+
         <Outlet />
-      </main>
+      </div>
     </div>
   );
 }

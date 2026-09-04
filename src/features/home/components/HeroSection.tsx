@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/constants/routes";
 
 export function HeroSection() {
   return (
@@ -12,11 +13,17 @@ export function HeroSection() {
           Welcome to Our Art Gallery
         </h1>
         <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
-          Explore creativity, imagination and artistic expression.
+          Explore creativity, imagination and artistic expression. Visitors can
+          browse freely. Sign up when you are ready to purchase.
         </p>
-        <Button asChild className="mt-8" size="lg">
-          <Link to="/#featured">Explore Gallery</Link>
-        </Button>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Button asChild size="lg">
+            <Link to={ROUTES.explore}>Explore Gallery</Link>
+          </Button>
+          <Button asChild size="lg" variant="outline">
+            <Link to={ROUTES.contact}>Contact</Link>
+          </Button>
+        </div>
       </div>
 
       <div className="overflow-hidden rounded-xl border border-border bg-card p-3 shadow-sm">

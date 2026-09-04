@@ -8,7 +8,7 @@ export function PublicFooter() {
   const { isAuthenticated } = useAuth();
 
   return (
-    <footer id="contact" className="scroll-mt-20 border-t border-border bg-card">
+    <footer className="border-t border-border bg-card">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-3">
         <div className="md:col-span-2">
           <div className="flex items-center gap-2">
@@ -29,18 +29,30 @@ export function PublicFooter() {
                 Home
               </Link>
             </li>
-            {isAuthenticated ? null : (
-              <li>
-                <Link to={ROUTES.login} className="hover:text-foreground">
-                  Login
-                </Link>
-              </li>
-            )}
             <li>
-              <Link to={`${ROUTES.root}#contact`} className="hover:text-foreground">
+              <Link to={ROUTES.explore} className="hover:text-foreground">
+                Explore
+              </Link>
+            </li>
+            <li>
+              <Link to={ROUTES.contact} className="hover:text-foreground">
                 Contact
               </Link>
             </li>
+            {isAuthenticated ? null : (
+              <>
+                <li>
+                  <Link to={ROUTES.signup} className="hover:text-foreground">
+                    Sign up
+                  </Link>
+                </li>
+                <li>
+                  <Link to={ROUTES.login} className="hover:text-foreground">
+                    Login
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

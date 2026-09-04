@@ -4,7 +4,10 @@ import { ROUTES } from "@/constants/routes";
 import { env } from "@/config/env";
 import { authStorage } from "@/utils/authStorage";
 
-const PUBLIC_AUTH_PATHS = [API_ENDPOINTS.auth.login];
+const PUBLIC_AUTH_PATHS = [
+  API_ENDPOINTS.auth.login,
+  API_ENDPOINTS.auth.register,
+];
 
 function isPublicAuthRequest(config?: InternalAxiosRequestConfig): boolean {
   const requestUrl = config?.url ?? "";
@@ -17,7 +20,8 @@ export const apiClient = axios.create({
     "Content-Type": "application/json",
     Accept: "application/json",
   },
-  timeout: 15000,
+  // Local API debugging can pause on breakpoints; keep this generous in development.
+  timeout: 30000,
 });
 
 apiClient.interceptors.request.use((config) => {

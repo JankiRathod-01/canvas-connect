@@ -29,6 +29,14 @@ export const authStorage = {
     localStorage.removeItem(AUTH_STORAGE_KEYS.accessToken);
   },
 
+  getExpiresAt(): string | null {
+    return localStorage.getItem(AUTH_STORAGE_KEYS.expiresAt);
+  },
+
+  setExpiresAt(expiresAt: string): void {
+    localStorage.setItem(AUTH_STORAGE_KEYS.expiresAt, expiresAt);
+  },
+
   getUser(): User | null {
     return readJson<User>(AUTH_STORAGE_KEYS.user);
   },
@@ -40,5 +48,6 @@ export const authStorage = {
   clearAuth(): void {
     localStorage.removeItem(AUTH_STORAGE_KEYS.accessToken);
     localStorage.removeItem(AUTH_STORAGE_KEYS.user);
+    localStorage.removeItem(AUTH_STORAGE_KEYS.expiresAt);
   },
 };

@@ -35,7 +35,10 @@ export function LoginForm() {
     setFormError(null);
 
     try {
-      await login(values);
+      await login({
+        email: values.email,
+        password: values.password,
+      });
     } catch (error) {
       setFormError(getErrorMessage(error));
     }
@@ -58,7 +61,7 @@ export function LoginForm() {
           id="email"
           type="text"
           autoComplete="username"
-          placeholder="admin@gallery.com"
+          placeholder="you@example.com"
           disabled={isLoggingIn}
           aria-invalid={Boolean(errors.email)}
           {...register("email")}

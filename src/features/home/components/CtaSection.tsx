@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/constants/routes";
 
 export function CtaSection() {
   return (
@@ -9,11 +10,17 @@ export function CtaSection() {
           Discover Art That Inspires
         </h2>
         <p className="mt-3 text-muted-foreground">
-          Visit the collection and find a work that speaks to you.
+          Visit the collection and find a work that speaks to you. Create an
+          account when you want to purchase.
         </p>
-        <Button asChild className="mt-6" size="lg">
-          <Link to="/#featured">Explore Artworks</Link>
-        </Button>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <Button asChild size="lg">
+            <Link to={ROUTES.explore}>Explore Artworks</Link>
+          </Button>
+          <Button asChild size="lg" variant="outline">
+            <Link to={ROUTES.signup}>Sign up to purchase</Link>
+          </Button>
+        </div>
       </div>
     </section>
   );

@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { LogOut, Menu, X } from "lucide-react";
+import { Link, NavLink } from "react-router-dom";
+import { Menu, X } from "lucide-react";
 import { GalleryMark } from "@/components/common/GalleryMark";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import { LogoutButton } from "@/components/common/LogoutButton";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
 import { useAuth } from "@/hooks/useAuth";
 import {
   getDisplayFirstName,
+  getPostLoginPath,
   isAdminRole,
+  isArtistRole,
 } from "@/utils/roleRedirect";
 import { cn } from "@/utils/cn";
 
@@ -21,18 +24,13 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   );
 
 export function PublicHeader() {
-  const navigate = useNavigate();
-  const { isAuthenticated, isInitializing, currentUser, logout, isLoggingOut } =
-    useAuth();
+  const { isAuthenticated, isInitializing, currentUser } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    navigate(ROUTES.root);
-    void logout();
-    setIsMenuOpen(false);
-  };
-
-  const showAdminLink = isAuthenticated && isAdminRole(currentUser?.role);
+  const dashboardPath = getPostLoginPath(currentUser?.role);
+  const showDashboardLink =
+    isAuthenticated &&
+    (isAdminRole(currentUser?.role) || isArtistRole(currentUser?.role));
 
   const authActions = isInitializing ? (
     <LoadingSpinner className="size-4" label="Checking session" />
@@ -41,25 +39,17 @@ export function PublicHeader() {
       <p className="hidden max-w-32 truncate text-sm text-muted-foreground sm:block">
         Hello, {getDisplayFirstName(currentUser?.name)}
       </p>
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        onClick={handleLogout}
-        disabled={isLoggingOut}
-      >
-        {isLoggingOut ? (
-          <LoadingSpinner className="size-4" />
-        ) : (
-          <LogOut className="size-4" />
-        )}
-        <span className="hidden sm:inline">Logout</span>
-      </Button>
+      <LogoutButton size="sm" alwaysShowLabel={false} />
     </div>
   ) : (
-    <Button asChild size="sm">
-      <Link to={ROUTES.login}>Login</Link>
-    </Button>
+    <div className="flex items-center gap-2">
+      <Button asChild size="sm" variant="outline">
+        <Link to={ROUTES.signup}>Sign up</Link>
+      </Button>
+      <Button asChild size="sm">
+        <Link to={ROUTES.login}>Login</Link>
+      </Button>
+    </div>
   );
 
   return (
@@ -83,9 +73,15 @@ export function PublicHeader() {
             <NavLink to={ROUTES.root} className={navLinkClass} end>
               Home
             </NavLink>
-            {showAdminLink ? (
-              <NavLink to={ROUTES.admin} className={navLinkClass}>
-                Admin Panel
+            <NavLink to={ROUTES.explore} className={navLinkClass}>
+              Explore
+            </NavLink>
+            <NavLink to={ROUTES.contact} className={navLinkClass}>
+              Contact
+            </NavLink>
+            {showDashboardLink ? (
+              <NavLink to={dashboardPath} className={navLinkClass}>
+                {isAdminRole(currentUser?.role) ? "Admin" : "Studio"}
               </NavLink>
             ) : null}
           </nav>
@@ -117,13 +113,27 @@ export function PublicHeader() {
             >
               Home
             </NavLink>
-            {showAdminLink ? (
+            <NavLink
+              to={ROUTES.explore}
+              className={navLinkClass}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Explore
+            </NavLink>
+            <NavLink
+              to={ROUTES.contact}
+              className={navLinkClass}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Contact
+            </NavLink>
+            {showDashboardLink ? (
               <NavLink
-                to={ROUTES.admin}
+                to={dashboardPath}
                 className={navLinkClass}
                 onClick={() => setIsMenuOpen(false)}
               >
-                Admin Panel
+                {isAdminRole(currentUser?.role) ? "Admin" : "Studio"}
               </NavLink>
             ) : null}
             {isAuthenticated ? (

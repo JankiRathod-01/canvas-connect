@@ -1,4 +1,5 @@
 import { ROUTES } from "@/constants/routes";
+import { USER_ROLES } from "@/constants/roles";
 
 function normalizeRole(role?: string | null): string {
   return role?.trim().toLowerCase() ?? "";
@@ -9,10 +10,9 @@ export function getPostLoginPath(role?: string | null): string {
     case "admin":
       return ROUTES.admin;
     case "artist":
-      // Artist area will be added later. Send artists home for now.
-      return ROUTES.root;
+      return ROUTES.artist;
     case "visitor":
-      return ROUTES.root;
+      return ROUTES.explore;
     default:
       return ROUTES.root;
   }
@@ -34,7 +34,15 @@ export function userHasAllowedRole(
 }
 
 export function isAdminRole(role?: string | null): boolean {
-  return normalizeRole(role) === "admin";
+  return normalizeRole(role) === normalizeRole(USER_ROLES.admin);
+}
+
+export function isArtistRole(role?: string | null): boolean {
+  return normalizeRole(role) === normalizeRole(USER_ROLES.artist);
+}
+
+export function isVisitorRole(role?: string | null): boolean {
+  return normalizeRole(role) === normalizeRole(USER_ROLES.visitor);
 }
 
 export function getDisplayFirstName(name?: string | null): string {

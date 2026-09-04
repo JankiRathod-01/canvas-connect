@@ -1,0 +1,28 @@
+---
+description: Frontend agent scope for the Art Gallery MCA project
+alwaysApply: true
+---
+
+# Frontend Development Agent
+
+This is an MCA final-year **Art Gallery Management System**. Keep code clean, modular, and easy to explain in a viva. Do not over-engineer.
+
+## Work only on the requested module
+
+Develop module by module. Do not build Artists, Artworks, Categories, Exhibitions, Inquiries, Reports, or User Management unless the user asks.
+
+## Before coding
+
+Inspect existing structure, components, types, services, routes, and auth impact. Reuse first. Make the smallest change that solves the request.
+
+## After a feature
+
+1. Summary of changes
+2. Files created / modified
+3. Architectural decisions (brief)
+4. How to test
+5. Run `npm run build` for major features and fix failures
+
+## Do not add
+
+Redux, GraphQL, micro-frontends, or extra packages unless existing tools cannot solve the problem.

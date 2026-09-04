@@ -9,7 +9,9 @@ import { AuthContext } from "@/context/auth-context";
 import { authService } from "@/features/auth/services/authService";
 import type {
   AuthContextValue,
+  AuthResponse,
   LoginRequest,
+  SignupRequest,
   User,
 } from "@/features/auth/types/auth";
 import { isUnauthorizedError } from "@/utils/error";
@@ -19,16 +21,34 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+function isExpired(expiresAt: string | null): boolean {
+  if (!expiresAt) {
+    return false;
+  }
+
+  const expiresMs = Date.parse(expiresAt);
+  if (Number.isNaN(expiresMs)) {
+    return false;
+  }
+
+  return expiresMs <= Date.now();
+}
+
 export function AuthProvider({ children }: AuthProviderProps) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isSigningUp, setIsSigningUp] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const applySession = useCallback((user: User, token?: string) => {
-    if (token) {
-      authStorage.setToken(token);
+  const applySession = useCallback((user: User, auth?: AuthResponse) => {
+    if (auth?.accessToken) {
+      authStorage.setToken(auth.accessToken);
+    }
+
+    if (auth?.expiresAt) {
+      authStorage.setExpiresAt(auth.expiresAt);
     }
 
     authStorage.setUser(user);
@@ -46,8 +66,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const bootstrapAuth = async () => {
       const token = authStorage.getToken();
       const storedUser = authStorage.getUser();
+      const expiresAt = authStorage.getExpiresAt();
 
-      if (!token || !storedUser) {
+      if (!token || !storedUser || isExpired(expiresAt)) {
         clearSession();
         setIsInitializing(false);
         return;
@@ -60,6 +81,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const user = await authService.getCurrentUser();
         applySession(user);
       } catch (error) {
+        // Keep local session if /auth/me is not available yet.
+        // Clear only on confirmed unauthorized responses.
         if (isUnauthorizedError(error)) {
           clearSession();
         }
@@ -75,9 +98,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       try {
         const response = await authService.login(credentials);
-        applySession(response.user, response.accessToken);
+        applySession(response.user, response);
       } finally {
         setIsLoggingIn(false);
+      }
+    },
+    [applySession],
+  );
+
+  const signup = useCallback(
+    async (payload: SignupRequest) => {
+      setIsSigningUp(true);
+
+      try {
+        const response = await authService.signup(payload);
+        applySession(response.user, response);
+      } finally {
+        setIsSigningUp(false);
       }
     },
     [applySession],
@@ -97,7 +134,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isInitializing,
       isLoggingIn,
       isLoggingOut,
+      isSigningUp,
       login,
+      signup,
       logout,
     }),
     [
@@ -106,7 +145,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isInitializing,
       isLoggingIn,
       isLoggingOut,
+      isSigningUp,
       login,
+      signup,
       logout,
     ],
   );

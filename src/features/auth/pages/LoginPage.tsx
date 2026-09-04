@@ -20,11 +20,12 @@ export function LoginPage() {
             <GalleryMark className="size-6" />
           </div>
           <p className="text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">
-            Administration
+            Sign in
           </p>
           <CardTitle className="text-3xl">{APP_NAME}</CardTitle>
           <CardDescription>
-            Sign in to manage the gallery collection.
+            Sign in with your gallery account. Admin, Artist, and Visitor users
+            are redirected to their own landing page.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -32,11 +33,19 @@ export function LoginPage() {
         </CardContent>
       </Card>
       <p className="mt-4 text-center text-sm text-muted-foreground">
+        New visitor or artist?{" "}
+        <Link
+          to={ROUTES.signup}
+          className="text-foreground hover:underline"
+        >
+          Create an account
+        </Link>
+        {" · "}
         <Link
           to={ROUTES.root}
           className="hover:text-foreground hover:underline"
         >
-          Back to home
+          Home
         </Link>
       </p>
     </div>

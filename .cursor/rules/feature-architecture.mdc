@@ -1,0 +1,28 @@
+---
+description: Feature-based React architecture and reusable UI
+globs: src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Architecture
+
+Keep the existing layout. Do not restructure the project without a clear reason. Do not move files randomly.
+
+```
+src/features/<module>/
+  components/ pages/ services/ hooks/ schemas/ types/
+```
+
+Feature UI stays in that feature. Shared UI goes in `components/common` or `components/ui`.
+
+## Components
+
+One responsibility, meaningful names, TypeScript props. Prefer `ArtworkCard` over `ArtworkEverything`.
+
+Before creating a component, check for an existing Button, Input, LoadingSpinner, EmptyState, PageHeader, or similar.
+
+## UI
+
+Clean, art-focused, student-project appropriate. Cards, spacing, subtle shadows, responsive Tailwind grids. Avoid SaaS chrome, neon, heavy animation, and fixed widths.
+
+Every feature must work on desktop, tablet, and mobile.

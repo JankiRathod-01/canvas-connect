@@ -1,0 +1,31 @@
+---
+description: API, auth, routing, and form conventions
+globs: src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# API
+
+Never call Axios from UI. Flow: Component → feature hook → service → `apiClient.ts` → ASP.NET API.
+
+Handle loading, empty, validation, network, server, and 401 errors with user-friendly messages. No `alert()`. No hard-coded API URLs; use `VITE_API_BASE_URL`.
+
+# Auth
+
+Use the existing Auth Context. Do not create a second auth system.
+
+- Unauthenticated + protected page → Login
+- Authenticated but wrong role → Unauthorized
+- Enforce this in `ProtectedRoute`, not only by hiding UI
+
+Add new routes in `routes/AppRoutes.tsx`. Protect and authorize there.
+
+# Forms
+
+Use React Hook Form + Zod. Include required validation, submit loading, and error/success feedback.
+
+Destructive actions need Cancel / Delete confirmation.
+
+# TypeScript
+
+No `any`. Share types; do not duplicate the same interface in multiple files.
