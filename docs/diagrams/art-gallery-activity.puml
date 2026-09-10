@@ -1,0 +1,73 @@
+@startuml art-gallery-activity
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam activityFontSize 12
+skinparam activityDiamondFontSize 11
+skinparam swimlaneTitleFontSize 14
+skinparam ActivityBackgroundColor #F8FAFC
+skinparam ActivityBorderColor #1E3A5F
+skinparam ActivityDiamondBackgroundColor #FEF3C7
+skinparam ActivityDiamondBorderColor #92400E
+title Activity Diagram — Main System Workflow
+
+|#E8EEF5|Visitor|
+start
+:Open Art Gallery System;
+:Select action;
+
+if (Browse or Login?) then (Browse Gallery)
+  :Browse Artworks;
+  :View Artwork Details;
+  if (Submit Inquiry?) then (Yes)
+    :Submit Inquiry Form;
+  else (No)
+  endif
+  :Continue Browsing / Exit;
+  stop
+else (Login / Register)
+endif
+
+|#F3F4F6|System|
+:Enter credentials;
+:Validate credentials;
+
+if (Credentials valid?) then (No)
+  :Display Login Error;
+  :Retry Login;
+  stop
+else (Yes)
+  :Identify User Role;
+endif
+
+|#E8EEF5|Visitor|
+if (Role?) then (Visitor)
+  :Visitor / Public Gallery;
+  :Browse Artworks;
+  :View Artwork Details;
+  if (Optional Inquiry?) then (Yes)
+    :Submit Inquiry;
+  else (No)
+  endif
+  :Logout / Continue;
+  stop
+
+|#FEF3C7|Artist|
+elseif (Artist) then
+  :Artist Dashboard;
+  :View / Update Profile;
+  :Manage Own Artworks;
+  :Logout;
+  stop
+
+|#DBEAFE|Admin|
+else (Admin)
+  :Admin Dashboard;
+  :Manage Users / Artists /
+  Categories / Artworks /
+  Exhibitions / Inquiries;
+  :Logout;
+  stop
+endif
+
+@enduml

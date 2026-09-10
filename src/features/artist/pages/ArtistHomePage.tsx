@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ImagePlus, Package, Palette } from "lucide-react";
+import { SafeImage } from "@/components/common/SafeImage";
 import {
   Card,
   CardContent,
@@ -99,7 +100,7 @@ export function ArtistHomePage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {myArtworks.map((artwork) => (
               <Card key={artwork.id} className="overflow-hidden shadow-sm">
-                <img
+                <SafeImage
                   src={artwork.image}
                   alt={artwork.title}
                   className="aspect-[4/3] w-full object-cover"

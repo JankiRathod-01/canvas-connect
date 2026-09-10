@@ -16,8 +16,8 @@ export function SignupPage() {
     <div className="w-full">
       <Card className="border-t-4 border-t-primary shadow-md">
         <CardHeader className="space-y-3 text-center">
-          <div className="mx-auto flex size-12 items-center justify-center rounded-full border border-primary/20 bg-background">
-            <GalleryMark className="size-6" />
+          <div className="mx-auto overflow-hidden rounded-full shadow-sm ring-1 ring-border/70">
+            <GalleryMark className="size-14" />
           </div>
           <p className="text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">
             Create account

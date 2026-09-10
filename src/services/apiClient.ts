@@ -7,6 +7,7 @@ import { authStorage } from "@/utils/authStorage";
 const PUBLIC_AUTH_PATHS = [
   API_ENDPOINTS.auth.login,
   API_ENDPOINTS.auth.register,
+  API_ENDPOINTS.contact,
 ];
 
 function isPublicAuthRequest(config?: InternalAxiosRequestConfig): boolean {

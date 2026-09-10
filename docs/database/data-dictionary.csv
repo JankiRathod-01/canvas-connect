@@ -1,0 +1,68 @@
+Table,Field Name,Data Type,Size,Null Allowed,Key,Default,Description
+AspNetUsers,Id,uniqueidentifier,-,No,PK,NEWID(),User primary key (Identity)
+AspNetUsers,Name,nvarchar,80,No,-,-,Display name (custom app field)
+AspNetUsers,UserName,nvarchar,256,Yes,-,-,Identity user name
+AspNetUsers,NormalizedUserName,nvarchar,256,Yes,UQ,-,Normalized user name
+AspNetUsers,Email,nvarchar,256,Yes,-,-,Email address
+AspNetUsers,NormalizedEmail,nvarchar,256,Yes,UQ,-,Normalized email
+AspNetUsers,EmailConfirmed,bit,-,No,-,0,Email confirmation flag
+AspNetUsers,PasswordHash,nvarchar,MAX,Yes,-,-,Identity password hash
+AspNetUsers,SecurityStamp,nvarchar,MAX,Yes,-,-,Identity security stamp
+AspNetUsers,ConcurrencyStamp,nvarchar,MAX,Yes,-,-,Concurrency token
+AspNetUsers,PhoneNumber,nvarchar,MAX,Yes,-,-,Optional phone
+AspNetUsers,PhoneNumberConfirmed,bit,-,No,-,0,Phone confirmation flag
+AspNetUsers,TwoFactorEnabled,bit,-,No,-,0,2FA flag
+AspNetUsers,LockoutEnd,datetimeoffset,-,Yes,-,-,Lockout end time
+AspNetUsers,LockoutEnabled,bit,-,No,-,1,Lockout enabled
+AspNetUsers,AccessFailedCount,int,-,No,-,0,Failed login count
+AspNetUsers,CreatedAt,datetime2,3,No,-,SYSUTCDATETIME(),Account created (UTC)
+AspNetUsers,UpdatedAt,datetime2,3,Yes,-,-,Last update (UTC)
+AspNetRoles,Id,uniqueidentifier,-,No,PK,NEWID(),Role id
+AspNetRoles,Name,nvarchar,256,Yes,-,-,Role name (Admin Artist Visitor)
+AspNetRoles,NormalizedName,nvarchar,256,Yes,UQ,-,Normalized role name
+AspNetRoles,ConcurrencyStamp,nvarchar,MAX,Yes,-,-,Concurrency token
+AspNetUserRoles,UserId,uniqueidentifier,-,No,"PK, FK",-,References AspNetUsers.Id
+AspNetUserRoles,RoleId,uniqueidentifier,-,No,"PK, FK",-,References AspNetRoles.Id
+Artists,ArtistId,uniqueidentifier,-,No,PK,NEWID(),Unique artist id
+Artists,FullName,nvarchar,150,No,-,-,Artist full name
+Artists,Biography,nvarchar,MAX,Yes,-,-,Biography
+Artists,Country,nvarchar,100,Yes,-,-,Country
+Artists,DateOfBirth,datetime2,-,Yes,-,-,Date of birth
+Artists,ProfileImageUrl,nvarchar,500,Yes,-,-,Profile image URL/path
+Artists,CreatedAt,datetime2,-,No,-,SYSUTCDATETIME(),Created (UTC)
+Artists,UpdatedAt,datetime2,-,Yes,-,-,Updated (UTC)
+Categories,CategoryId,uniqueidentifier,-,No,PK,NEWID(),Unique category id
+Categories,Name,nvarchar,100,No,UQ,-,Category name
+Categories,Description,nvarchar,500,Yes,-,-,Description
+Categories,CreatedAt,datetime2,-,No,-,SYSUTCDATETIME(),Created (UTC)
+Artworks,ArtworkId,uniqueidentifier,-,No,PK,NEWID(),Unique artwork id
+Artworks,Title,nvarchar,200,No,-,-,Title
+Artworks,Description,nvarchar,MAX,Yes,-,-,Description
+Artworks,ArtistId,uniqueidentifier,-,No,FK,-,References Artists.ArtistId
+Artworks,CategoryId,uniqueidentifier,-,No,FK,-,References Categories.CategoryId
+Artworks,Price,decimal,"18,2",Yes,-,-,Price
+Artworks,YearCreated,int,-,Yes,-,-,Year created
+Artworks,ImageUrl,nvarchar,500,Yes,-,-,Image URL/path
+Artworks,Status,int,-,No,-,0,ArtworkStatus enum
+Artworks,CreatedAt,datetime2,-,No,-,SYSUTCDATETIME(),Created (UTC)
+Artworks,UpdatedAt,datetime2,-,Yes,-,-,Updated (UTC)
+Exhibitions,ExhibitionId,uniqueidentifier,-,No,PK,NEWID(),Unique exhibition id
+Exhibitions,Name,nvarchar,200,No,-,-,Exhibition name
+Exhibitions,Description,nvarchar,MAX,Yes,-,-,Description
+Exhibitions,Venue,nvarchar,200,Yes,-,-,Venue
+Exhibitions,StartDate,datetime2,-,No,-,-,Start date
+Exhibitions,EndDate,datetime2,-,No,-,-,End date
+Exhibitions,CreatedAt,datetime2,-,No,-,SYSUTCDATETIME(),Created (UTC)
+Exhibitions,UpdatedAt,datetime2,-,Yes,-,-,Updated (UTC)
+ExhibitionArtworks,ExhibitionArtworkId,uniqueidentifier,-,No,PK,NEWID(),Junction row id
+ExhibitionArtworks,ExhibitionId,uniqueidentifier,-,No,FK,-,References Exhibitions.ExhibitionId
+ExhibitionArtworks,ArtworkId,uniqueidentifier,-,No,FK,-,References Artworks.ArtworkId
+ExhibitionArtworks,CreatedAt,datetime2,-,No,-,SYSUTCDATETIME(),Link created (UTC)
+Inquiries,InquiryId,uniqueidentifier,-,No,PK,NEWID(),Unique inquiry id
+Inquiries,Name,nvarchar,150,No,-,-,Visitor name
+Inquiries,Email,nvarchar,256,No,-,-,Visitor email
+Inquiries,Phone,nvarchar,30,Yes,-,-,Optional phone
+Inquiries,Subject,nvarchar,200,No,-,-,Subject
+Inquiries,Message,nvarchar,MAX,No,-,-,Message
+Inquiries,Status,int,-,No,-,0,InquiryStatus enum
+Inquiries,CreatedAt,datetime2,-,No,-,SYSUTCDATETIME(),Submitted (UTC)

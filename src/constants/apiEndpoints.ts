@@ -9,4 +9,5 @@ export const API_ENDPOINTS = {
     visitors: "/users/visitors",
     artists: "/users/artists",
   },
+  contact: "/contact",
 } as const;

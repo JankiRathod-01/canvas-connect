@@ -21,8 +21,7 @@ export const galleryArtworks: GalleryArtwork[] = [
     artistId: "static-artist-1",
     category: "Painting",
     price: 12000,
-    image:
-      "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=800&q=80",
+    image: "/images/artworks/nature-in-colors.jpg",
     description: "A vibrant study of monsoon greens and soft light.",
   },
   {
@@ -32,8 +31,7 @@ export const galleryArtworks: GalleryArtwork[] = [
     artistId: "static-artist-1",
     category: "Still Life",
     price: 8500,
-    image:
-      "https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=800&q=80",
+    image: "/images/artworks/quiet-still-life.jpg",
     description: "Everyday objects arranged with calm, careful balance.",
   },
   {
@@ -43,8 +41,7 @@ export const galleryArtworks: GalleryArtwork[] = [
     artistId: "static-artist-2",
     category: "Landscape",
     price: 15000,
-    image:
-      "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=800&q=80",
+    image: "/images/artworks/golden-horizon.jpg",
     description: "Warm dusk tones across an open coastal sky.",
   },
   {
@@ -54,8 +51,7 @@ export const galleryArtworks: GalleryArtwork[] = [
     artistId: "static-artist-2",
     category: "Abstract",
     price: 18000,
-    image:
-      "https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&w=800&q=80",
+    image: "/images/artworks/abstract-harmony.jpg",
     description: "Layered shapes exploring rhythm and movement.",
   },
   {
@@ -65,8 +61,7 @@ export const galleryArtworks: GalleryArtwork[] = [
     artistId: "static-artist-1",
     category: "Portrait",
     price: 14000,
-    image:
-      "https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?auto=format&fit=crop&w=800&q=80",
+    image: "/images/artworks/portrait-study.jpg",
     description: "A quiet portrait focused on expression and light.",
   },
   {
@@ -76,8 +71,7 @@ export const galleryArtworks: GalleryArtwork[] = [
     artistId: "static-artist-2",
     category: "Modern",
     price: 16500,
-    image:
-      "https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&w=800&q=80",
+    image: "/images/artworks/city-in-light.jpg",
     description: "Urban color and evening glow in a modern style.",
   },
 ];

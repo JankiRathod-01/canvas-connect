@@ -1,0 +1,86 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ecfdf5', 'primaryTextColor': '#1c1917', 'primaryBorderColor': '#0f766e', 'lineColor': '#0f766e', 'fontFamily': 'arial'}}}%%
+erDiagram
+    AspNetUsers {
+        uniqueidentifier Id PK
+        nvarchar Name
+        nvarchar Email
+        nvarchar PasswordHash
+        datetime2 CreatedAt
+        datetime2 UpdatedAt
+    }
+
+    AspNetRoles {
+        uniqueidentifier Id PK
+        nvarchar Name
+    }
+
+    AspNetUserRoles {
+        uniqueidentifier UserId PK
+        uniqueidentifier RoleId PK
+    }
+
+    Artists {
+        uniqueidentifier ArtistId PK
+        nvarchar FullName
+        nvarchar Biography
+        nvarchar Country
+        datetime2 DateOfBirth
+        nvarchar ProfileImageUrl
+        datetime2 CreatedAt
+        datetime2 UpdatedAt
+    }
+
+    Categories {
+        uniqueidentifier CategoryId PK
+        nvarchar Name
+        nvarchar Description
+        datetime2 CreatedAt
+    }
+
+    Artworks {
+        uniqueidentifier ArtworkId PK
+        nvarchar Title
+        uniqueidentifier ArtistId FK
+        uniqueidentifier CategoryId FK
+        decimal Price
+        int YearCreated
+        nvarchar ImageUrl
+        int Status
+        datetime2 CreatedAt
+        datetime2 UpdatedAt
+    }
+
+    Exhibitions {
+        uniqueidentifier ExhibitionId PK
+        nvarchar Name
+        nvarchar Venue
+        datetime2 StartDate
+        datetime2 EndDate
+        datetime2 CreatedAt
+        datetime2 UpdatedAt
+    }
+
+    ExhibitionArtworks {
+        uniqueidentifier ExhibitionArtworkId PK
+        uniqueidentifier ExhibitionId FK
+        uniqueidentifier ArtworkId FK
+        datetime2 CreatedAt
+    }
+
+    Inquiries {
+        uniqueidentifier InquiryId PK
+        nvarchar Name
+        nvarchar Email
+        nvarchar Phone
+        nvarchar Subject
+        nvarchar Message
+        int Status
+        datetime2 CreatedAt
+    }
+
+    AspNetUsers ||--o{ AspNetUserRoles : has
+    AspNetRoles ||--o{ AspNetUserRoles : assigned
+    Artists ||--o{ Artworks : creates
+    Categories ||--o{ Artworks : classifies
+    Exhibitions ||--o{ ExhibitionArtworks : includes
+    Artworks ||--o{ ExhibitionArtworks : appears_in

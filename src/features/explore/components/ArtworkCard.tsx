@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { SafeImage } from "@/components/common/SafeImage";
 import { ROUTES } from "@/constants/routes";
 import {
   formatPrice,
@@ -37,7 +38,7 @@ export function ArtworkCard({ artwork }: ArtworkCardProps) {
 
   return (
     <Card className="overflow-hidden shadow-sm">
-      <img
+      <SafeImage
         src={artwork.image}
         alt={artwork.title}
         className="aspect-[4/5] w-full object-cover transition-transform duration-300 hover:scale-[1.02]"

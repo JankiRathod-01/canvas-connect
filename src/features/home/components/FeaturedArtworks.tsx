@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { SafeImage } from "@/components/common/SafeImage";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -38,7 +39,7 @@ export function FeaturedArtworks() {
         <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
           {featuredArtworks.map((artwork) => (
             <Card key={artwork.id} className="overflow-hidden shadow-sm">
-              <img
+              <SafeImage
                 src={artwork.image}
                 alt={artwork.title}
                 className="aspect-[4/5] w-full object-cover transition-transform duration-300 hover:scale-[1.02]"

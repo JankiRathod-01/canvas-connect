@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { CheckCircle2 } from "lucide-react";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,26 +13,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import {
+  contactSchema,
+  type ContactFormValues,
+} from "@/features/contact/schemas/contactSchema";
+import { contactService } from "@/features/contact/services/contactService";
+import { getErrorMessage } from "@/utils/error";
 
-const contactSchema = z.object({
-  name: z.string().trim().min(2, "Name must be at least 2 characters"),
-  email: z.email("Enter a valid email address"),
-  message: z
-    .string()
-    .trim()
-    .min(10, "Message must be at least 10 characters")
-    .max(500, "Message must be under 500 characters"),
-});
-
-type ContactFormValues = z.infer<typeof contactSchema>;
+const SUCCESS_FALLBACK =
+  "Thank you. Your message has been sent to the gallery team.";
 
 export function ContactPage() {
-  const [submitted, setSubmitted] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
@@ -44,12 +43,19 @@ export function ContactPage() {
     },
   });
 
-  const onSubmit = async (_values: ContactFormValues) => {
-    await new Promise((resolve) => {
-      window.setTimeout(resolve, 400);
-    });
-    setSubmitted(true);
-    reset();
+  const messageLength = watch("message")?.length ?? 0;
+
+  const onSubmit = async (values: ContactFormValues) => {
+    setSubmitError(null);
+    setSuccessMessage(null);
+
+    try {
+      const result = await contactService.submit(values);
+      setSuccessMessage(result.message || SUCCESS_FALLBACK);
+      reset();
+    } catch (error) {
+      setSubmitError(getErrorMessage(error));
+    }
   };
 
   return (
@@ -69,15 +75,15 @@ export function ContactPage() {
         <div className="mt-8 space-y-4 text-sm text-muted-foreground">
           <p>
             <span className="font-medium text-foreground">Email:</span>{" "}
-            hello@artgallery.demo
+            ankirathod134@gmail.com
           </p>
           <p>
-            <span className="font-medium text-foreground">Phone:</span> +91 98765
-            43210
+            <span className="font-medium text-foreground">Phone:</span>{" "}
+            7778846493
           </p>
           <p>
-            <span className="font-medium text-foreground">Address:</span> 12
-            Gallery Lane, Ahmedabad
+            <span className="font-medium text-foreground">Address:</span>{" "}
+            Rancharda, Via: Shilaj, Ahmedabad - 382115, Gujarat, India
           </p>
         </div>
       </div>
@@ -86,28 +92,35 @@ export function ContactPage() {
         <CardHeader>
           <CardTitle>Send a message</CardTitle>
           <CardDescription>
-            This form is static for now. Messages are not saved to the server
-            yet.
+            Your message is emailed to the gallery team through Canvas Connect.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
-            {submitted ? (
+            {successMessage ? (
               <Alert>
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="mt-0.5 size-4 shrink-0" />
-                  <AlertDescription>
-                    Thanks for your message. We will connect this form to the
-                    API in a later module.
-                  </AlertDescription>
+                  <AlertDescription>{successMessage}</AlertDescription>
+                </div>
+              </Alert>
+            ) : null}
+
+            {submitError ? (
+              <Alert variant="destructive">
+                <div className="flex items-start gap-2">
+                  <AlertCircle className="mt-0.5 size-4 shrink-0" />
+                  <AlertDescription>{submitError}</AlertDescription>
                 </div>
               </Alert>
             ) : null}
 
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="contact-name">Name</Label>
               <Input
-                id="name"
+                id="contact-name"
+                autoComplete="name"
+                placeholder="Your name"
                 disabled={isSubmitting}
                 aria-invalid={Boolean(errors.name)}
                 {...register("name")}
@@ -118,10 +131,12 @@ export function ContactPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="contact-email">Email</Label>
               <Input
-                id="email"
+                id="contact-email"
                 type="email"
+                autoComplete="email"
+                placeholder="you@example.com"
                 disabled={isSubmitting}
                 aria-invalid={Boolean(errors.email)}
                 {...register("email")}
@@ -132,11 +147,18 @@ export function ContactPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="message">Message</Label>
+              <div className="flex items-center justify-between gap-2">
+                <Label htmlFor="contact-message">Message</Label>
+                <span className="text-xs text-muted-foreground">
+                  {messageLength}/500
+                </span>
+              </div>
               <textarea
-                id="message"
+                id="contact-message"
                 rows={5}
+                maxLength={500}
                 disabled={isSubmitting}
+                placeholder="How can the gallery help you?"
                 aria-invalid={Boolean(errors.message)}
                 className="flex min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
                 {...register("message")}
@@ -149,7 +171,14 @@ export function ContactPage() {
             </div>
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Sending..." : "Send message"}
+              {isSubmitting ? (
+                <span className="inline-flex items-center gap-2">
+                  <LoadingSpinner className="size-4 text-current" label="Sending" />
+                  Sending...
+                </span>
+              ) : (
+                "Send message"
+              )}
             </Button>
           </form>
         </CardContent>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import { GalleryMark } from "@/components/common/GalleryMark";
+import { GalleryBrand } from "@/components/common/GalleryBrand";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { LogoutButton } from "@/components/common/LogoutButton";
 import { Button } from "@/components/ui/button";
@@ -55,18 +55,11 @@ export function PublicHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
-        <Link
+        <GalleryBrand
           to={ROUTES.root}
-          className="flex min-w-0 items-center gap-2 text-foreground"
           onClick={() => setIsMenuOpen(false)}
-        >
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-primary/20 bg-background">
-            <GalleryMark />
-          </span>
-          <span className="truncate font-serif text-lg font-semibold sm:text-xl">
-            Art Gallery
-          </span>
-        </Link>
+          subtitle="Curated collection"
+        />
 
         <div className="flex items-center gap-2">
           <nav className="hidden items-center gap-1 md:flex">

@@ -1,0 +1,93 @@
+@startuml art-gallery-use-case
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #F8FAFC
+  BorderColor #1E3A5F
+  FontColor #1F2937
+  FontSize 13
+}
+skinparam actor {
+  BackgroundColor #FFFFFF
+  BorderColor #1E3A5F
+  FontColor #1F2937
+  FontSize 14
+}
+skinparam rectangle {
+  BorderColor #1E3A5F
+  FontColor #1E3A5F
+  FontSize 16
+}
+left to right direction
+title Use Case Diagram — Art Gallery Management System
+
+actor Admin as Admin
+actor Artist as Artist
+actor Visitor as Visitor
+
+rectangle "Art Gallery Management System" {
+  usecase "Register" as UC_Register
+  usecase "Login" as UC_Login
+  usecase "Logout" as UC_Logout
+
+  usecase "Manage Users" as UC_Users
+  usecase "Manage Artists" as UC_Artists
+  usecase "Manage Categories" as UC_Categories
+  usecase "Manage Artworks" as UC_Artworks
+  usecase "Manage Exhibitions" as UC_Exhibitions
+  usecase "Manage Inquiries" as UC_Inquiries
+
+  usecase "View Profile" as UC_ViewProfile
+  usecase "Update Profile" as UC_UpdateProfile
+  usecase "Manage Own Artworks" as UC_OwnArtworks
+  usecase "View Own Artwork Collection" as UC_OwnCollection
+
+  usecase "Browse Gallery" as UC_Browse
+  usecase "View Artwork Details" as UC_Details
+  usecase "Search / Filter Artworks" as UC_Search
+  usecase "Submit Inquiry" as UC_Inquiry
+}
+
+' Authentication associations
+Admin --> UC_Login
+Admin --> UC_Logout
+Artist --> UC_Register
+Artist --> UC_Login
+Artist --> UC_Logout
+Visitor --> UC_Register
+Visitor --> UC_Login
+Visitor --> UC_Logout
+
+' Admin use cases
+Admin --> UC_Users
+Admin --> UC_Artists
+Admin --> UC_Categories
+Admin --> UC_Artworks
+Admin --> UC_Exhibitions
+Admin --> UC_Inquiries
+
+' Artist use cases
+Artist --> UC_ViewProfile
+Artist --> UC_UpdateProfile
+Artist --> UC_OwnArtworks
+Artist --> UC_OwnCollection
+
+' Visitor use cases
+Visitor --> UC_Browse
+Visitor --> UC_Details
+Visitor --> UC_Search
+Visitor --> UC_Inquiry
+
+' Include / extend
+UC_Details ..> UC_Browse : <<extend>>
+
+note as N1
+  Diagrams represent the proposed
+  functional design of the system.
+end note
+N1 .. UC_Browse
+
+@enduml

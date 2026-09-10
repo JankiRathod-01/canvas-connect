@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { SafeImage } from "@/components/common/SafeImage";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/constants/routes";
 
@@ -27,8 +28,8 @@ export function HeroSection() {
       </div>
 
       <div className="overflow-hidden rounded-xl border border-border bg-card p-3 shadow-sm">
-        <img
-          src="https://images.unsplash.com/photo-1554907984-15263bfd63bd?auto=format&fit=crop&w=1200&q=80"
+        <SafeImage
+          src="/images/hero-gallery.jpg"
           alt="Artwork displayed in a quiet gallery hall"
           className="aspect-[4/3] w-full rounded-lg object-cover"
         />

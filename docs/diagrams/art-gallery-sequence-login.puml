@@ -1,0 +1,68 @@
+@startuml art-gallery-sequence-login
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 6
+skinparam maxMessageSize 180
+skinparam BoxPadding 8
+skinparam sequence {
+  LifeLineBorderColor #1E3A5F
+  LifeLineBackgroundColor #F8FAFC
+  ParticipantBorderColor #1E3A5F
+  ParticipantBackgroundColor #E8EEF5
+  ParticipantFontColor #1F2937
+  ActorBorderColor #1E3A5F
+  ActorBackgroundColor #FFFFFF
+  ArrowColor #1E3A5F
+  DividerBackgroundColor #F3F4F6
+  DividerBorderColor #1E3A5F
+}
+title Sequence Diagram — User Login and Role-Based Access
+
+actor User
+participant "React\nFrontend" as FE
+participant "ASP.NET Core\nWeb API" as API
+participant "ASP.NET Core\nIdentity" as ID
+database "SQL Server" as DB
+participant "Dashboard\n(by Role)" as Dash
+
+User -> FE : Enter email/username\nand password
+activate FE
+
+FE -> API : POST /api/auth/login
+activate API
+
+API -> ID : Validate credentials
+activate ID
+
+ID -> DB : Retrieve user information
+activate DB
+DB --> ID : Return user record
+deactivate DB
+
+ID --> API : Authentication result\n+ user roles
+deactivate ID
+
+alt Valid credentials
+  API --> FE : JWT token + role information
+  deactivate API
+  FE --> User : Login successful
+  FE -> Dash : Redirect by role
+  activate Dash
+  note right of Dash
+    Admin → Admin Dashboard
+    Artist → Artist Dashboard
+    Visitor → Public Gallery
+  end note
+  deactivate Dash
+  deactivate FE
+else Invalid credentials
+  API --> FE : Authentication error
+  deactivate API
+  FE --> User : Display login error
+  note over User, FE : User may retry login
+  deactivate FE
+end
+
+@enduml

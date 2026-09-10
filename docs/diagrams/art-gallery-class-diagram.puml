@@ -1,0 +1,152 @@
+@startuml art-gallery-class-diagram
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 45
+skinparam backgroundColor #FFFFFF
+title Art Gallery Management System — UML Class Diagram
+
+enum ArtworkStatus {
+  Available = 0
+  Sold = 1
+  Displayed = 2
+  Archived = 3
+}
+
+enum InquiryStatus {
+  New = 0
+  Read = 1
+  Responded = 2
+  Closed = 3
+}
+
+class "IdentityUser<Guid>" as IdentityUser {
+  + Id : Guid <<PK>>
+  + UserName : string?
+  + Email : string?
+  + EmailConfirmed : bool
+  + PasswordHash : string?
+  + PhoneNumber : string?
+  + LockoutEnabled : bool
+  + AccessFailedCount : int
+}
+
+class ApplicationUser {
+  + Name : string
+  + CreatedAt : DateTime
+  + UpdatedAt : DateTime?
+}
+
+IdentityUser <|-- ApplicationUser
+
+note right of ApplicationUser
+  **Implemented**
+  Inherits ASP.NET Core IdentityUser<Guid>.
+  Roles are NOT a string property.
+  Roles use AspNetRoles + AspNetUserRoles
+  (Admin, Artist, Visitor).
+  Password hashing is managed by Identity.
+end note
+
+class Artist {
+  + ArtistId : Guid <<PK>>
+  + FullName : string
+  + Biography : string?
+  + Country : string?
+  + DateOfBirth : DateTime?
+  + ProfileImageUrl : string?
+  + CreatedAt : DateTime
+  + UpdatedAt : DateTime?
+  --
+  + Artworks : ICollection<Artwork>
+}
+
+class Category {
+  + CategoryId : Guid <<PK>>
+  + Name : string
+  + Description : string?
+  + CreatedAt : DateTime
+  --
+  + Artworks : ICollection<Artwork>
+}
+
+class Artwork {
+  + ArtworkId : Guid <<PK>>
+  + Title : string
+  + Description : string?
+  + ArtistId : Guid <<FK>>
+  + CategoryId : Guid <<FK>>
+  + Price : decimal?
+  + YearCreated : int?
+  + ImageUrl : string?
+  + Status : ArtworkStatus
+  + CreatedAt : DateTime
+  + UpdatedAt : DateTime?
+  --
+  + Artist : Artist
+  + Category : Category
+  + ExhibitionArtworks : ICollection<ExhibitionArtwork>
+}
+
+class Exhibition {
+  + ExhibitionId : Guid <<PK>>
+  + Name : string
+  + Description : string?
+  + Venue : string?
+  + StartDate : DateTime
+  + EndDate : DateTime
+  + CreatedAt : DateTime
+  + UpdatedAt : DateTime?
+  --
+  + ExhibitionArtworks : ICollection<ExhibitionArtwork>
+}
+
+class ExhibitionArtwork {
+  + ExhibitionArtworkId : Guid <<PK>>
+  + ExhibitionId : Guid <<FK>>
+  + ArtworkId : Guid <<FK>>
+  + CreatedAt : DateTime
+  --
+  + Exhibition : Exhibition
+  + Artwork : Artwork
+}
+
+class Inquiry {
+  + InquiryId : Guid <<PK>>
+  + Name : string
+  + Email : string
+  + Phone : string?
+  + Subject : string
+  + Message : string
+  + Status : InquiryStatus
+  + CreatedAt : DateTime
+}
+
+Artist "1" --> "0..*" Artwork : creates >
+Category "1" --> "0..*" Artwork : classifies >
+Exhibition "1" --> "0..*" ExhibitionArtwork : includes >
+Artwork "1" --> "0..*" ExhibitionArtwork : appears in >
+
+Artwork ..> ArtworkStatus : uses
+Inquiry ..> InquiryStatus : uses
+
+note left of Artist
+  **Planned domain entity**
+  Artist profile ≠ ApplicationUser
+  with role "Artist".
+  No required FK to ApplicationUser.
+end note
+
+note bottom of ExhibitionArtwork
+  Unique: (ExhibitionId, ArtworkId)
+  Resolves Exhibition ↔ Artwork M:N
+end note
+
+note bottom of Inquiry
+  No UserId FK.
+  Anonymous inquiries allowed.
+end note
+
+@enduml
