@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SafeImage } from "@/components/common/SafeImage";
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,9 +11,26 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ROUTES } from "@/constants/routes";
-import { featuredArtworks } from "@/features/home/data/featuredArtworks";
+import { exploreService } from "@/features/explore/services/exploreService";
+import type { GalleryArtwork } from "@/features/explore/types/galleryArtwork";
 
 export function FeaturedArtworks() {
+  const [items, setItems] = useState<GalleryArtwork[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    void (async () => {
+      try {
+        const artworks = await exploreService.getArtworks();
+        setItems(artworks.slice(0, 4));
+      } catch {
+        setItems([]);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, []);
+
   return (
     <section
       id="featured"
@@ -27,8 +46,8 @@ export function FeaturedArtworks() {
               Featured Artworks
             </h2>
             <p className="mt-2 text-muted-foreground">
-              A small selection from the gallery. Browse the full explore page
-              to see all artist products.
+              A small selection from the live gallery. Browse Explore to see all
+              artist products.
             </p>
           </div>
           <Button asChild variant="outline">
@@ -36,26 +55,43 @@ export function FeaturedArtworks() {
           </Button>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {featuredArtworks.map((artwork) => (
-            <Card key={artwork.id} className="overflow-hidden shadow-sm">
-              <SafeImage
-                src={artwork.image}
-                alt={artwork.title}
-                className="aspect-[4/5] w-full object-cover transition-transform duration-300 hover:scale-[1.02]"
-              />
-              <CardHeader className="p-4 pb-1">
-                <CardTitle className="text-xl">{artwork.title}</CardTitle>
-                <CardDescription>{artwork.artist}</CardDescription>
-              </CardHeader>
-              <CardContent className="p-4 pt-2">
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                  {artwork.category}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="mt-10 flex justify-center">
+            <span className="inline-flex items-center gap-2 text-muted-foreground">
+              <LoadingSpinner label="Loading featured artworks" />
+              Loading featured works...
+            </span>
+          </div>
+        ) : null}
+
+        {!isLoading && items.length === 0 ? (
+          <p className="mt-10 text-center text-muted-foreground">
+            No artworks published yet. Check back soon.
+          </p>
+        ) : null}
+
+        {!isLoading && items.length > 0 ? (
+          <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {items.map((artwork) => (
+              <Card key={artwork.id} className="overflow-hidden shadow-sm">
+                <SafeImage
+                  src={artwork.image}
+                  alt={artwork.title}
+                  className="aspect-[4/5] w-full object-cover transition-transform duration-300 hover:scale-[1.02]"
+                />
+                <CardHeader className="p-4 pb-1">
+                  <CardTitle className="text-xl">{artwork.title}</CardTitle>
+                  <CardDescription>{artwork.artistName}</CardDescription>
+                </CardHeader>
+                <CardContent className="p-4 pt-2">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                    {artwork.category}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : null}
       </div>
     </section>
   );

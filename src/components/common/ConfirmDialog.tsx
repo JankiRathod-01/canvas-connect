@@ -1,4 +1,5 @@
 import { useEffect, useId } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 
@@ -54,9 +55,9 @@ export function ConfirmDialog({
     return null;
   }
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
       role="presentation"
     >
       <button
@@ -112,6 +113,7 @@ export function ConfirmDialog({
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

@@ -43,7 +43,28 @@ export function AdminLayout() {
             Visitors
           </NavLink>
           <NavLink to={ROUTES.adminArtists} className={adminNavLinkClass}>
-            Artists
+            Artist accounts
+          </NavLink>
+          <NavLink to={ROUTES.adminArtistProfiles} className={adminNavLinkClass}>
+            Artist profiles
+          </NavLink>
+          <NavLink to={ROUTES.adminCategories} className={adminNavLinkClass}>
+            Categories
+          </NavLink>
+          <NavLink to={ROUTES.adminArtworks} className={adminNavLinkClass}>
+            Artworks
+          </NavLink>
+          <NavLink to={ROUTES.adminExhibitions} className={adminNavLinkClass}>
+            Exhibitions
+          </NavLink>
+          <NavLink to={ROUTES.adminInquiries} className={adminNavLinkClass}>
+            Inquiries
+          </NavLink>
+          <NavLink to={ROUTES.adminOrders} className={adminNavLinkClass}>
+            Orders
+          </NavLink>
+          <NavLink to={ROUTES.adminReports} className={adminNavLinkClass}>
+            Reports
           </NavLink>
         </nav>
 

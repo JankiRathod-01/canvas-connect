@@ -144,6 +144,16 @@ export function toApiError(error: unknown): ApiError {
     };
   }
 
+  if (statusCode === 404) {
+    const parsed = messageFromApiBody(body, "The requested item was not found.");
+    return {
+      message: parsed.message,
+      errors: parsed.errors,
+      statusCode,
+      code: "NOT_FOUND",
+    };
+  }
+
   if (statusCode === 429) {
     return {
       message: "Too many attempts. Please wait a moment and try again.",

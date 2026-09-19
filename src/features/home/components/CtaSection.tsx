@@ -18,6 +18,9 @@ export function CtaSection() {
             <Link to={ROUTES.explore}>Explore Artworks</Link>
           </Button>
           <Button asChild size="lg" variant="outline">
+            <Link to={ROUTES.exhibitions}>View Exhibitions</Link>
+          </Button>
+          <Button asChild size="lg" variant="outline">
             <Link to={ROUTES.signup}>Sign up to purchase</Link>
           </Button>
         </div>

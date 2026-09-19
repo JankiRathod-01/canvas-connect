@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "react-router-dom";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -19,12 +20,15 @@ import {
   type ContactFormValues,
 } from "@/features/contact/schemas/contactSchema";
 import { contactService } from "@/features/contact/services/contactService";
+import { useAuth } from "@/hooks/useAuth";
 import { getErrorMessage } from "@/utils/error";
 
 const SUCCESS_FALLBACK =
   "Thank you. Your message has been sent to the gallery team.";
 
 export function ContactPage() {
+  const [searchParams] = useSearchParams();
+  const { currentUser } = useAuth();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -39,9 +43,21 @@ export function ContactPage() {
     defaultValues: {
       name: "",
       email: "",
+      phone: "",
+      subject: "",
       message: "",
     },
   });
+
+  useEffect(() => {
+    reset({
+      name: currentUser?.name ?? "",
+      email: currentUser?.email ?? "",
+      phone: "",
+      subject: searchParams.get("subject") ?? "",
+      message: searchParams.get("message") ?? "",
+    });
+  }, [currentUser, searchParams, reset]);
 
   const messageLength = watch("message")?.length ?? 0;
 
@@ -52,7 +68,13 @@ export function ContactPage() {
     try {
       const result = await contactService.submit(values);
       setSuccessMessage(result.message || SUCCESS_FALLBACK);
-      reset();
+      reset({
+        name: currentUser?.name ?? "",
+        email: currentUser?.email ?? "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
     } catch (error) {
       setSubmitError(getErrorMessage(error));
     }
@@ -92,7 +114,8 @@ export function ContactPage() {
         <CardHeader>
           <CardTitle>Send a message</CardTitle>
           <CardDescription>
-            Your message is emailed to the gallery team through Canvas Connect.
+            Your inquiry is saved for the gallery team and emailed when mail is
+            configured.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -147,16 +170,46 @@ export function ContactPage() {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="contact-phone">Phone (optional)</Label>
+              <Input
+                id="contact-phone"
+                type="tel"
+                autoComplete="tel"
+                placeholder="Your phone number"
+                disabled={isSubmitting}
+                aria-invalid={Boolean(errors.phone)}
+                {...register("phone")}
+              />
+              {errors.phone ? (
+                <p className="text-sm text-destructive">{errors.phone.message}</p>
+              ) : null}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="contact-subject">Subject</Label>
+              <Input
+                id="contact-subject"
+                placeholder="What is this about?"
+                disabled={isSubmitting}
+                aria-invalid={Boolean(errors.subject)}
+                {...register("subject")}
+              />
+              {errors.subject ? (
+                <p className="text-sm text-destructive">{errors.subject.message}</p>
+              ) : null}
+            </div>
+
+            <div className="space-y-2">
               <div className="flex items-center justify-between gap-2">
                 <Label htmlFor="contact-message">Message</Label>
                 <span className="text-xs text-muted-foreground">
-                  {messageLength}/500
+                  {messageLength}/2000
                 </span>
               </div>
               <textarea
                 id="contact-message"
                 rows={5}
-                maxLength={500}
+                maxLength={2000}
                 disabled={isSubmitting}
                 placeholder="How can the gallery help you?"
                 aria-invalid={Boolean(errors.message)}

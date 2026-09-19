@@ -12,6 +12,7 @@ import {
   getPostLoginPath,
   isAdminRole,
   isArtistRole,
+  isVisitorRole,
 } from "@/utils/roleRedirect";
 import { cn } from "@/utils/cn";
 
@@ -30,7 +31,17 @@ export function PublicHeader() {
   const dashboardPath = getPostLoginPath(currentUser?.role);
   const showDashboardLink =
     isAuthenticated &&
-    (isAdminRole(currentUser?.role) || isArtistRole(currentUser?.role));
+    (isAdminRole(currentUser?.role) ||
+      isArtistRole(currentUser?.role) ||
+      isVisitorRole(currentUser?.role));
+
+  const dashboardLabel = isAdminRole(currentUser?.role)
+    ? "Admin"
+    : isArtistRole(currentUser?.role)
+      ? "Studio"
+      : "My home";
+
+  const showMyOrdersLink = isAuthenticated && isVisitorRole(currentUser?.role);
 
   const authActions = isInitializing ? (
     <LoadingSpinner className="size-4" label="Checking session" />
@@ -69,12 +80,20 @@ export function PublicHeader() {
             <NavLink to={ROUTES.explore} className={navLinkClass}>
               Explore
             </NavLink>
+            <NavLink to={ROUTES.exhibitions} className={navLinkClass}>
+              Exhibitions
+            </NavLink>
             <NavLink to={ROUTES.contact} className={navLinkClass}>
               Contact
             </NavLink>
+            {showMyOrdersLink ? (
+              <NavLink to={ROUTES.visitorOrders} className={navLinkClass}>
+                My orders
+              </NavLink>
+            ) : null}
             {showDashboardLink ? (
               <NavLink to={dashboardPath} className={navLinkClass}>
-                {isAdminRole(currentUser?.role) ? "Admin" : "Studio"}
+                {dashboardLabel}
               </NavLink>
             ) : null}
           </nav>
@@ -114,19 +133,35 @@ export function PublicHeader() {
               Explore
             </NavLink>
             <NavLink
+              to={ROUTES.exhibitions}
+              className={navLinkClass}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Exhibitions
+            </NavLink>
+            <NavLink
               to={ROUTES.contact}
               className={navLinkClass}
               onClick={() => setIsMenuOpen(false)}
             >
               Contact
             </NavLink>
+            {showMyOrdersLink ? (
+              <NavLink
+                to={ROUTES.visitorOrders}
+                className={navLinkClass}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                My orders
+              </NavLink>
+            ) : null}
             {showDashboardLink ? (
               <NavLink
                 to={dashboardPath}
                 className={navLinkClass}
                 onClick={() => setIsMenuOpen(false)}
               >
-                {isAdminRole(currentUser?.role) ? "Admin" : "Studio"}
+                {dashboardLabel}
               </NavLink>
             ) : null}
             {isAuthenticated ? (

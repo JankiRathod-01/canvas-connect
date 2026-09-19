@@ -13,6 +13,8 @@ export const contactService = {
       {
         name: payload.name.trim(),
         email: payload.email.trim().toLowerCase(),
+        phone: payload.phone?.trim() || null,
+        subject: payload.subject.trim(),
         message: payload.message.trim(),
       },
     );

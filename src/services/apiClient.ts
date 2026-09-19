@@ -8,6 +8,11 @@ const PUBLIC_AUTH_PATHS = [
   API_ENDPOINTS.auth.login,
   API_ENDPOINTS.auth.register,
   API_ENDPOINTS.contact,
+  API_ENDPOINTS.orders.root,
+  API_ENDPOINTS.artworks.root,
+  API_ENDPOINTS.categories.root,
+  API_ENDPOINTS.artists.root,
+  API_ENDPOINTS.exhibitions.root,
 ];
 
 function isPublicAuthRequest(config?: InternalAxiosRequestConfig): boolean {

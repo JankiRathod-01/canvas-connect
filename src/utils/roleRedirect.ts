@@ -11,8 +11,8 @@ export function getPostLoginPath(role?: string | null): string {
       return ROUTES.admin;
     case "artist":
       return ROUTES.artist;
-    case "visitor":
-      return ROUTES.explore;
+      case "visitor":
+      return ROUTES.visitor;
     default:
       return ROUTES.root;
   }
