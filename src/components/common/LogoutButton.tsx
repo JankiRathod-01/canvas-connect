@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import type { ButtonVariantProps } from "@/components/ui/button-variants";
-import { ROUTES } from "@/constants/routes";
 import { useAuth } from "@/hooks/useAuth";
 
 interface LogoutButtonProps {
@@ -22,14 +20,12 @@ export function LogoutButton({
   alwaysShowLabel = true,
   className,
 }: LogoutButtonProps) {
-  const navigate = useNavigate();
   const { logout, isLoggingOut } = useAuth();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const handleConfirmLogout = async () => {
-    navigate(ROUTES.root);
-    await logout();
     setIsConfirmOpen(false);
+    await logout();
   };
 
   return (

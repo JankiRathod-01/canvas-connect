@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import { AuthContext } from "@/context/auth-context";
+import { ROUTES } from "@/constants/routes";
 import { authService } from "@/features/auth/services/authService";
 import type {
   AuthContextValue,
@@ -122,9 +123,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const logout = useCallback(async () => {
     setIsLoggingOut(true);
-    void authService.logout();
-    clearSession();
-    setIsLoggingOut(false);
+    try {
+      try {
+        await authService.logout();
+      } catch {
+        // Ignore API logout failures; local session still clears.
+      }
+      clearSession();
+      // Hard navigation avoids ProtectedRoute racing to /login after session clear.
+      window.location.assign(ROUTES.root);
+    } finally {
+      setIsLoggingOut(false);
+    }
   }, [clearSession]);
 
   const value = useMemo<AuthContextValue>(
